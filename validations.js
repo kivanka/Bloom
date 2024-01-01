@@ -3,7 +3,7 @@ import { body, param } from 'express-validator';
 //auth validation
 export const loginValidation = [
     body('email', 'Invalid email format').isEmail(),
-    body('password', 'Password shoud be at least 5 symbols').isLength({ min: 5 }), 
+    body('password', 'Password shoud be at least 5 symbols').isLength({ min: 5 }),
 ];
 
 export const registerValidation = [
@@ -52,7 +52,7 @@ export const updateOrderValidation = [
 ];
 
 //categorys
-export const createOrUpdateCategoryValidation = [
+export const createCategoryValidation = [
     body('name', 'Category name is required').notEmpty(),
     body('name', 'Category name must not exceed 32 characters').isLength({ max: 32 }),
 ];
