@@ -1,6 +1,6 @@
 import CategoryModel from '../models/category.js';
 
-export const createCategory = async (req, res) => {
+export const create = async (req, res) => {
     try {
         const category = new CategoryModel({
             Name: req.body.name
@@ -12,7 +12,7 @@ export const createCategory = async (req, res) => {
     }
 };
 
-export const getAllCategories = async (req, res) => {
+export const getAll = async (req, res) => {
     try {
         const categories = await CategoryModel.find();
         res.json(categories);
@@ -21,7 +21,7 @@ export const getAllCategories = async (req, res) => {
     }
 };
 
-export const getCategoryById = async (req, res) => {
+export const getOne = async (req, res) => {
     try {
         const category = await CategoryModel.findById(req.params.id);
         if (!category) {
@@ -33,7 +33,7 @@ export const getCategoryById = async (req, res) => {
     }
 };
 
-export const updateCategory = async (req, res) => {
+export const update = async (req, res) => {
     try {
         const category = await CategoryModel.findByIdAndUpdate(
             req.params.id,
@@ -49,7 +49,7 @@ export const updateCategory = async (req, res) => {
     }
 };
 
-export const deleteCategory = async (req, res) => {
+export const remove = async (req, res) => {
     try {
         const category = await CategoryModel.findByIdAndRemove(req.params.id);
         if (!category) {

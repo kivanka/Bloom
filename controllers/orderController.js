@@ -1,6 +1,6 @@
 import OrderModel from '../models/order.js';
 
-export const createOrder = async (req, res) => {
+export const create = async (req, res) => {
     try {
         const newOrder = new OrderModel({
             products: req.body.products,
@@ -13,7 +13,7 @@ export const createOrder = async (req, res) => {
     }
 };
 
-export const getAllOrders = async (req, res) => {
+export const getAll = async (req, res) => {
     try {
         const orders = await OrderModel.find().populate('products');
         res.json(orders);
@@ -22,7 +22,7 @@ export const getAllOrders = async (req, res) => {
     }
 };
 
-export const getOrderById = async (req, res) => {
+export const getOne = async (req, res) => {
     try {
         const order = await OrderModel.findById(req.params.id).populate('products');
         if (!order) {
@@ -34,7 +34,7 @@ export const getOrderById = async (req, res) => {
     }
 };
 
-export const updateOrder = async (req, res) => {
+export const update = async (req, res) => {
     try {
         const updatedOrder = await OrderModel.findByIdAndUpdate(
             req.params.id,
@@ -53,7 +53,7 @@ export const updateOrder = async (req, res) => {
     }
 };
 
-export const deleteOrder = async (req, res) => {
+export const remove = async (req, res) => {
     try {
         const order = await OrderModel.findByIdAndDelete(req.params.id);
         if (!order) {
