@@ -1,4 +1,4 @@
-import CategoryModel from '../models/category.js'; // Adjust the path as necessary
+import CategoryModel from '../models/category.js';
 
 export const createCategory = async (req, res) => {
     try {

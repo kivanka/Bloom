@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
+const Schema = mongoose.Schema; 
 
-const OrderSchema = new mongoose.Schema(
+const OrderSchema = new Schema(
     {
         purchaseDate: {
             type: Date,
@@ -17,4 +18,7 @@ const OrderSchema = new mongoose.Schema(
         }
     });
 
-export default mongoose.model('Order', OrderSchema);
+const Order = mongoose.model('Order', OrderSchema);
+
+export { OrderSchema }; // Export the schema
+export default Order; // Keep the default export for the model

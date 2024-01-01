@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { OrderSchema } from './order.js';
 
 const UserSchema = new mongoose.Schema(
     {
@@ -20,7 +21,7 @@ const UserSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
-        orders: [Order.schema],
+        orders: [OrderSchema],
     },
     {
         timestamps: true,
