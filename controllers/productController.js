@@ -49,6 +49,22 @@ export const update = async (req, res) => {
     }
 };
 
+export const remove = async (req, res) => {
+    try {
+        const productId = req.params.id;
+        const product = await ProductModel.findByIdAndDelete(productId);
+
+        if (!product) {
+            return res.status(404).json({ message: 'Product not found' });
+        }
+
+        res.json({ message: 'Product successfully deleted' });
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ message: 'Delete attempt failed' });
+    }
+};
+
 export const getOne = async (req, res) => {
     try {
         const productId = req.params.id;
