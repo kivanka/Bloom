@@ -77,8 +77,8 @@ app.get('/orders', adminOnlyAuth, OrderController.getAll);
 
 //categories
 app.post('/categories/create', adminOnlyAuth, createCategoryValidation, handleValidationErrors, CategoryContoller.create);
-app.path('/categories/:id/update', adminOnlyAuth, updateCategoryValidation, handleValidationErrors, CategoryContoller.update);
-app.delete('/categories/:id/delte', adminOnlyAuth, CategoryContoller.remove);
+app.patch('/categories/:id/update', adminOnlyAuth, updateCategoryValidation, handleValidationErrors, CategoryContoller.update);
+app.delete('/categories/:id/delete', adminOnlyAuth, CategoryContoller.remove);
 app.get('/categories/:id', allRolesAuth, CategoryContoller.getOne);
 app.get('/categories', allRolesAuth, CategoryContoller.getAll);
 
