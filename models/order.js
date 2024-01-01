@@ -1,19 +1,20 @@
 import mongoose from "mongoose";
 
-const OrderSchema = new Schema({
-    purchaseDate: {
-        type: Date,
-        default: Date.now
-    },
-    products: [
-        {
-            type: Schema.Types.ObjectId,
-            ref: 'Product'
+const OrderSchema = new mongoose.Schema(
+    {
+        purchaseDate: {
+            type: Date,
+            default: Date.now
+        },
+        products: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: 'Product'
+            }
+        ],
+        total: {
+            type: Number
         }
-    ],
-    total: {
-        type: Number
-    }
-});
+    });
 
-const Order = mongoose.model('Order', OrderSchema);
+export default mongoose.model('Order', OrderSchema);
