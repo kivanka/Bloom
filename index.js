@@ -17,7 +17,7 @@ import {
     updateProductValidation,
     createOrderValidation,
     updateOrderValidation,
-    createOrUpdateCategoryValidation,
+    createCategoryValidation,
     updateCategoryValidation,
 } from './validations.js';
 
@@ -55,6 +55,32 @@ app.post('/upload', adminOnlyAuth, upload.single('image'), (req, res) => {
         url: `/uploads/${req.file.originalname}`,
     });
 });
+
+//auth
+app.post('/auth/login', loginValidation, handleValidationErrors, UserController.login);
+app.post('/auth/register', registerValidation, handleValidationErrors, UserController.register); 
+app.get('/auth/me', allRolesAuth, UserController.getMe);
+
+//products
+app.post('/products/create', adminOnlyAuth, createProductValidation, handleValidationErrors, ProductController.create);
+app.patch('/products/:id/update', adminOnlyAuth, updateProductValidation, handleValidationErrors, ProductController.update);
+app.delete('/products/:id/delete', adminOnlyAuth, ProductController.remove)
+app.get('/products/:id', allRolesAuth, ProductController.getOne);
+app.get('/products', allRolesAuth, ProductController.getAll)
+
+//orders
+app.post('/orders/create', allRolesAuth, createOrderValidation, handleValidationErrors, OrderController.create);
+app.patch('/orders/:id/update', adminOnlyAuth, updateOrderValidation, handleValidationErrors, OrderController.update);
+app.delete('/orders/:id/delete', adminOnlyAuth, OrderController.remove);
+app.get('/orders/:id', allRolesAuth, OrderController.getOne);
+app.get('/orders', adminOnlyAuth, OrderController.getAll);
+
+//categories
+app.post('/categories/create', adminOnlyAuth, createCategoryValidation, handleValidationErrors, CategoryContoller.create);
+app.path('/categories/:id/update', adminOnlyAuth, updateCategoryValidation, handleValidationErrors, CategoryContoller.update);
+app.delete('/categories/:id/delte', adminOnlyAuth, CategoryContoller.remove);
+app.get('/categories/:id', allRolesAuth, CategoryContoller.getOne);
+app.get('/categories', allRolesAuth, CategoryContoller.getAll);
 
 app.listen(4444, (err) => {
     if (err) {
