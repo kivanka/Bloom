@@ -3,14 +3,14 @@ import mongoose from 'mongoose';
 import multer from 'multer';
 import cors from 'cors';
 
-import { 
+import {
     UserController,
     ProductController,
     OrderController,
     CategoryContoller,
 } from './controllers/index.js';
 
-import { 
+import {
     loginValidation,
     registerValidation,
     createProductValidation,
@@ -21,7 +21,7 @@ import {
     updateCategoryValidation,
 } from './validations.js';
 
-import { 
+import {
     handleValidationErrors,
     allRolesAuth,
     adminOnlyAuth,
@@ -34,20 +34,20 @@ mongoose
 
 const app = express();
 
-const storage = multer.diskStorage({ 
-    destination: (_, __, cb) => { 
-        cb(null, 'uploads') 
-    }, 
-    filename: (_, file, cb) => { 
-        cb(null, file.originalname) 
-    }, 
+const storage = multer.diskStorage({
+    destination: (_, __, cb) => {
+        cb(null, 'uploads')
+    },
+    filename: (_, file, cb) => {
+        cb(null, file.originalname)
+    },
 });
 
 const upload = multer({ storage });
 
-app.use(express.json()); 
+app.use(express.json());
 app.use(cors());
-app.use('/uploads', express.static('uploads')); 
+app.use('/uploads', express.static('uploads'));
 
 //media upload pathes
 app.post('/upload', adminOnlyAuth, upload.single('image'), (req, res) => {
@@ -58,7 +58,7 @@ app.post('/upload', adminOnlyAuth, upload.single('image'), (req, res) => {
 
 //auth
 app.post('/auth/login', loginValidation, handleValidationErrors, UserController.login);
-app.post('/auth/register', registerValidation, handleValidationErrors, UserController.register); 
+app.post('/auth/register', registerValidation, handleValidationErrors, UserController.register);
 app.get('/auth/me', allRolesAuth, UserController.getMe);
 
 //products
