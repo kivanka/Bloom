@@ -21,14 +21,6 @@ const ProductSchema = new mongoose.Schema(
                 ref: 'Category',
             }
         ],
-        featured: {
-            type: Boolean,
-            default: false
-        },
-        seasonal: {
-            type: Boolean,
-            default: false
-        }
     },
 );
 
