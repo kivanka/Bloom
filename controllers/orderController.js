@@ -2,14 +2,17 @@ import OrderModel from '../models/order.js';
 
 export const create = async (req, res) => {
     try {
-        const newOrder = new OrderModel({
+        const doc = new OrderModel({
             products: req.body.products,
-            total: req.body.total
+            total: req.body.total,
         });
-        const savedOrder = await newOrder.save();
-        res.status(201).json(savedOrder);
+
+        const order = await doc.save();
+
+        res.json(order);
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        console.error(err);
+        res.status(500).json({ message: 'Create attempt failed', error: err });
     }
 };
 
@@ -36,31 +39,41 @@ export const getOne = async (req, res) => {
 
 export const update = async (req, res) => {
     try {
-        const updatedOrder = await OrderModel.findByIdAndUpdate(
-            req.params.id,
+        const orderId = req.params.id;
+
+        await OrderModel.updateOne(
+            {
+                _id: orderId,
+            },
             {
                 products: req.body.products,
-                total: req.body.total
+                total: req.body.total,
             },
-            { new: true }
-        ).populate('products');
-        if (!updatedOrder) {
-            return res.status(404).json({ message: 'Order not found' });
-        }
-        res.json(updatedOrder);
+        );
+
+        res.json({
+            success: true,
+        });
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        console.log(err);
+        res.status(500).json({
+            message: 'Update attempt failed',
+        });
     }
 };
 
 export const remove = async (req, res) => {
     try {
-        const order = await OrderModel.findByIdAndDelete(req.params.id);
+        const orderId = req.params.id;
+        const order = await OrderModel.findByIdAndDelete(orderId);
+
         if (!order) {
-            return res.status(404).json({ message: 'Order not found' });
+            return res.status(404).json({ message: 'order not found' });
         }
-        res.json({ message: 'Order successfully deleted' });
+
+        res.json({ message: 'order successfully deleted' });
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        console.log(err);
+        res.status(500).json({ message: 'Delete attempt failed' });
     }
 };
