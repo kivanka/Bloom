@@ -28,7 +28,7 @@ import {
 } from './utils/index.js';
 
 mongoose
-    .connect('mongodb+srv://admin:He12345678@cluster0.k6wg7rw.mongodb.net/?retryWrites=true&w=majority/Bloom')
+    .connect('mongodb+srv://admin:He12345678@cluster0.k6wg7rw.mongodb.net/Bloom?retryWrites=true&w=majority')
     .then(() => console.log('DB OK'))
     .catch((err) => console.log('DB ERROR', err));
 
@@ -65,8 +65,8 @@ app.get('/auth/me', allRolesAuth, UserController.getMe);
 app.post('/products/create', adminOnlyAuth, createProductValidation, handleValidationErrors, ProductController.create);
 app.patch('/products/:id/update', adminOnlyAuth, updateProductValidation, handleValidationErrors, ProductController.update);
 app.delete('/products/:id/delete', adminOnlyAuth, ProductController.remove)
-app.get('/products/:id', allRolesAuth, ProductController.getOne);
-app.get('/products', allRolesAuth, ProductController.getAll)
+app.get('/products/:id', ProductController.getOne);
+app.get('/products', ProductController.getAll)
 
 //orders
 app.post('/orders/create', allRolesAuth, createOrderValidation, handleValidationErrors, OrderController.create);
@@ -79,8 +79,8 @@ app.get('/orders', adminOnlyAuth, OrderController.getAll);
 app.post('/categories/create', adminOnlyAuth, createCategoryValidation, handleValidationErrors, CategoryContoller.create);
 app.patch('/categories/:id/update', adminOnlyAuth, updateCategoryValidation, handleValidationErrors, CategoryContoller.update);
 app.delete('/categories/:id/delete', adminOnlyAuth, CategoryContoller.remove);
-app.get('/categories/:id', allRolesAuth, CategoryContoller.getOne);
-app.get('/categories', allRolesAuth, CategoryContoller.getAll);
+app.get('/categories/:id', CategoryContoller.getOne);
+app.get('/categories', CategoryContoller.getAll);
 
 app.listen(4444, (err) => {
     if (err) {
