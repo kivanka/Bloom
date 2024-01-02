@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-const Schema = mongoose.Schema; // Add this line
+const Schema = mongoose.Schema;
 
 const ProductSchema = new Schema({
     name: {
@@ -17,7 +17,7 @@ const ProductSchema = new Schema({
     imageUrl: String,
     categories: [
         {
-            type: Schema.Types.ObjectId, // Changed from Schema.Types.String
+            type: Schema.Types.ObjectId,
             ref: 'Category',
         }
     ],
