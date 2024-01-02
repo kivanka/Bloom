@@ -5,7 +5,7 @@ export const create = async (req, res) => {
         const doc = new ProductModel({
             name: req.body.name,
             description: req.body.description,
-            price: req.body.tables,
+            price: req.body.price,
             imageUrl: req.body.imageUrl,
             categories: req.body.categories,
         });
@@ -32,7 +32,7 @@ export const update = async (req, res) => {
             {
                 name: req.body.name,
                 description: req.body.description,
-                price: req.body.tables,
+                price: req.body.price,
                 imageUrl: req.body.imageUrl,
                 categories: req.body.categories,
             },
