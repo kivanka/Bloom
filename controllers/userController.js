@@ -1,40 +1,42 @@
 import jwt from 'jsonwebtoken';
-import bcrypt from 'bcrypt'; 
+import bcrypt from 'bcrypt';
 
 import UserModel from '../models/user.js';
 
 export const register = async (req, res) => {
-    try{ 
-    const password = req.body.password;
-    const salt = await bcrypt.genSalt(10);
-    const hash = await bcrypt.hash(password, salt);
+    try {
+        const password = req.body.password;
+        const salt = await bcrypt.genSalt(10);
+        const hash = await bcrypt.hash(password, salt);
 
-    const doc = new UserModel({
-        email: req.body.email,
-        userName: req.body.userName,
-        passwordHash: hash,
-        role: req.body.role,
-    });
+        const doc = new UserModel({
+            email: req.body.email,
+            userName: req.body.userName,
+            passwordHash: hash,
+            role: req.body.role,
+        });
 
-    const user = await doc.save();
+        const user = await doc.save();
 
-    const token = jwt.sign({
-        _id: user._id, 
-    }, 
-    'secret123',
-    {
-        expiresIn: '30d',
-    },
-    ); 
+        const token = jwt.sign(
+            {
+                _id: user._id, 
+                role: user.role, // Добавьте это
+            }, 
+            'secret123',
+            {
+                expiresIn: '30d',
+            }
+        );
 
-    const {passwordHash, ...userData} = user._doc;
+        const { passwordHash, ...userData } = user._doc;
 
-    res.json({
-        ...user._doc,
-        token,
-    });
+        res.json({
+            ...user._doc,
+            token,
+        });
     }
-    catch (err){
+    catch (err) {
         console.log(err);
         res.status(500).json({
             message: 'Не удалось зарегистрироваться',
@@ -42,34 +44,35 @@ export const register = async (req, res) => {
     }
 };
 
-export const login =  async (req, res) => {
-    try{
+export const login = async (req, res) => {
+    try {
         const user = await UserModel.findOne({ email: req.body.email })
 
         if (!user) {
             return res.status(404).json({
                 message: 'User undefined',
-            });     
+            });
         }
 
         const isValidPass = await bcrypt.compare(req.body.password, user._doc.passwordHash);
 
-        if (!isValidPass){ 
+        if (!isValidPass) {
             return res.status(400).json({
                 message: 'Wrong login or password',
-            });   
+            });
         }
 
         const token = jwt.sign({
-            _id: user._id, 
-        }, 
-        'secret123',
-        {
-            expiresIn: '30d',
+            _id: user._id,
+            role: user.role,
         },
-        ); 
+            'secret123',
+            {
+                expiresIn: '30d',
+            },
+        );
 
-        const {passwordHash, ...userData} = user._doc;
+        const { passwordHash, ...userData } = user._doc;
 
         res.json({
             ...user._doc,
@@ -93,9 +96,9 @@ export const getMe = async (req, res) => {
             });
         }
 
-        const {passwordHash, ...userData} = user._doc;
+        const { passwordHash, ...userData } = user._doc;
 
-        res.json(userData); 
+        res.json(userData);
     } catch (err) {
         console.log(err);
         res.status(500).json({
