@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-const Schema = mongoose.Schema; 
+const Schema = mongoose.Schema;
 
 const OrderSchema = new Schema(
     {
@@ -10,7 +10,7 @@ const OrderSchema = new Schema(
         products: [
             {
                 type: Schema.Types.ObjectId,
-                ref: 'Product'
+                ref: 'Product',
             }
         ],
         total: {
@@ -20,5 +20,5 @@ const OrderSchema = new Schema(
 
 const Order = mongoose.model('Order', OrderSchema);
 
-export { OrderSchema }; // Export the schema
-export default Order; // Keep the default export for the model
+export { OrderSchema };
+export default Order;
