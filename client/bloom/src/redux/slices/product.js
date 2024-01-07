@@ -27,7 +27,11 @@ export const createProduct = createAsyncThunk('products/create', async (productD
 export const updateProduct = createAsyncThunk(
     'products/update',
     async ({ id, updatedData }) => {
-        const response = await axios.patch(`/products/${id}/update`, updatedData);
+        const response = await axios.patch(`/products/${id}/update`, updatedData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
         return response.data;
     }
 );
@@ -91,13 +95,11 @@ const productSlice = createSlice({
             })
 
             .addCase(updateProduct.fulfilled, (state, action) => {
-                const index = state.products.items.findIndex(
-                    (product) => product._id === action.payload._id
-                );
+                const index = state.products.items.findIndex(product => product._id === action.meta.arg.id);
                 if (index !== -1) {
-                    state.products.items[index] = action.payload;
+                    state.products.items[index] = {...state.products.items[index], ...action.payload};
                 }
-            })
+            })         
 
             .addCase(deleteProduct.fulfilled, (state, action) => {
                 state.products.items = state.products.items.filter(

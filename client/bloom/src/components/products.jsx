@@ -2,12 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchProducts, fetchProductsByCategory } from '../redux/slices/product';
 import { fetchCategories } from '../redux/slices/categories';
-import { createProduct } from '../redux/slices/product';
+import { createProduct, deleteProduct } from '../redux/slices/product';
 import axios from '../redux/axios';
 import { Button, Card, CardActionArea, CardMedia, CardContent, Typography, Grid, Select, MenuItem, FormControl, InputLabel, Dialog, DialogTitle, DialogContent, DialogActions, TextField } from '@mui/material';
 
 const ProductsPage = () => {
     const dispatch = useDispatch();
+    const [selectedProducts, setSelectedProducts] = useState([]);
     const categories = useSelector(state => state.categories.categories);
     const products = useSelector(state => state.products.products.items);
     const user = useSelector(state => state.auth.data);
@@ -58,19 +59,36 @@ const ProductsPage = () => {
         formData.append('name', newProduct.name);
         formData.append('description', newProduct.description);
         formData.append('price', newProduct.price);
-        formData.append('categories', selectedCategories);
-
+        // Добавляем каждый ID категории отдельно
+        selectedCategories.forEach(categoryId => {
+            formData.append('categories[]', categoryId);
+        });
+    
         const response = await uploadProduct(formData);
-
+    
         if (response.url) {
             const protocol = window.location.protocol;
             const fullImageUrl = `${protocol}//localhost:4444${response.url}`;
-
-            const productWithImage = { ...newProduct, imageUrl: fullImageUrl };
+    
+            const productWithImage = { ...newProduct, imageUrl: fullImageUrl, categories: selectedCategories };
             dispatch(createProduct(productWithImage));
         }
-
+    
         handleClose();
+    };    
+
+    const toggleSelectProduct = (id) => {
+        setSelectedProducts(prevSelected =>
+            prevSelected.includes(id)
+                ? prevSelected.filter(pid => pid !== id)
+                : [...prevSelected, id]
+        );
+    };
+
+    // Функция удаления выделенных продуктов
+    const handleDeleteSelected = async () => {
+        await Promise.all(selectedProducts.map(id => dispatch(deleteProduct(id))));
+        setSelectedProducts([]);
     };
 
     useEffect(() => {
@@ -102,9 +120,16 @@ const ProductsPage = () => {
     return (
         <div style={{ margin: '20px' }}>
             {user && user.role === 'admin' && (
-                <Button variant="contained" color="primary" onClick={handleClickOpen}>
-                    Добавить
-                </Button>
+                <>
+                    <Button variant="contained" color="primary" onClick={handleClickOpen}>
+                        Добавить
+                    </Button>
+                    {selectedProducts.length > 0 && (
+                        <Button variant="contained" color="secondary" onClick={handleDeleteSelected}>
+                            Удалить
+                        </Button>
+                    )}
+                </>
             )}
             <FormControl fullWidth style={{ marginBottom: '20px' }}>
                 <InputLabel id="category-select-label">Категория</InputLabel>
@@ -126,8 +151,8 @@ const ProductsPage = () => {
             </FormControl>
             <Grid container spacing={2}>
                 {Array.isArray(products) && products.map(product => (
-                    <Grid item xs={12} sm={6} md={4} lg={3} key={product._id}>
-                        <Card>
+                    <Grid item xs={12} sm={6} md={4} lg={3} key={product._id} onClick={() => toggleSelectProduct(product._id)}>
+                        <Card style={{ backgroundColor: selectedProducts.includes(product._id) ? 'lightgray' : 'white' }}>
                             <CardActionArea>
                                 {product.imageUrl && (
                                     <CardMedia
