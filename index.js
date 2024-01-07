@@ -67,6 +67,7 @@ app.patch('/products/:id/update', adminOnlyAuth, updateProductValidation, handle
 app.delete('/products/:id/delete', adminOnlyAuth, ProductController.remove)
 app.get('/products/:id', ProductController.getOne);
 app.get('/products', ProductController.getAll)
+app.get('/products/category/:categoryId', ProductController.getByCategory);
 
 //orders
 app.post('/orders/create', allRolesAuth, createOrderValidation, handleValidationErrors, OrderController.create);

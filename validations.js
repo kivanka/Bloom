@@ -24,7 +24,7 @@ export const createProductValidation = [
     body('name', 'Product name is required').notEmpty(),
     body('description', 'Product description is required').notEmpty(),
     body('price', 'Product price must be a number').isNumeric(),
-    body('imageUrl', 'Invalid URL format for image').optional().isURL(),
+    body('imageUrl', 'Invalid URL format for image').optional(),
     body('categories', 'Categories must be an array').optional().isArray(),
     body('categories.*', 'Invalid category ID').optional().isMongoId(),
 ];
@@ -33,7 +33,7 @@ export const updateProductValidation = [
     body('name', 'Product name is required').optional().notEmpty(),
     body('description', 'Product description is required').optional().notEmpty(),
     body('price', 'Product price must be a number').optional().isNumeric(),
-    body('imageUrl', 'Invalid URL format for image').optional().isURL(),
+    body('imageUrl', 'Invalid URL format for image').optional(),
     body('categories', 'Categories must be an array').optional().isArray(),
     body('categories.*', 'Invalid category ID').optional().isMongoId(),
 ];

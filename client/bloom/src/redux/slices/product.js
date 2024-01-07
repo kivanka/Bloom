@@ -6,6 +6,11 @@ export const fetchProducts = createAsyncThunk('products/fetchProducts', async ()
     return data;
 });
 
+export const fetchProductsByCategory = createAsyncThunk('products/fetchProductsByCategory', async (categoryId) => {
+    const { data } = await axios.get(`/products/category/${categoryId}`);
+    return data;
+});
+
 export const fetchProductsById = createAsyncThunk(
     'products/fetchProductsById',
     async (id) => {
@@ -78,6 +83,11 @@ const productSlice = createSlice({
 
             .addCase(createProduct.fulfilled, (state, action) => {
                 state.products.items.push(action.payload);
+            })
+
+            .addCase(fetchProductsByCategory.fulfilled, (state, action) => {
+                state.products.items = action.payload;
+                state.products.status = 'loaded';
             })
 
             .addCase(updateProduct.fulfilled, (state, action) => {

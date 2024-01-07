@@ -96,3 +96,17 @@ export const getAll = async (req, res) => {
         });
     }
 };
+
+export const getByCategory = async (req, res) => {
+    try {
+        const categoryId = req.params.categoryId;
+        const products = await ProductModel.find({ categories: categoryId });
+
+        res.json(products);
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({
+            message: 'Error retrieving products by category',
+        });
+    }
+};
