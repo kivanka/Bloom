@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchProducts, fetchProductsByCategory } from '../redux/slices/product';
 import { fetchCategories } from '../redux/slices/categories';
@@ -172,6 +173,7 @@ const ProductsPage = () => {
                                     <Typography variant="body1" color="text.primary">
                                         Цена: {product.price} ₽
                                     </Typography>
+                                    <Link to={`/products/${product._id}`}>Подробнее</Link>
                                 </CardContent>
                             </CardActionArea>
                         </Card>

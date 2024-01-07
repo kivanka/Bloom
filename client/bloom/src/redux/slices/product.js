@@ -27,11 +27,8 @@ export const createProduct = createAsyncThunk('products/create', async (productD
 export const updateProduct = createAsyncThunk(
     'products/update',
     async ({ id, updatedData }) => {
-        const response = await axios.patch(`/products/${id}/update`, updatedData, {
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            }
-        });
+        // If you're not uploading files, remove the 'Content-Type' header or set it to 'application/json'.
+        const response = await axios.patch(`/products/${id}/update`, updatedData);
         return response.data;
     }
 );
@@ -97,9 +94,12 @@ const productSlice = createSlice({
             .addCase(updateProduct.fulfilled, (state, action) => {
                 const index = state.products.items.findIndex(product => product._id === action.meta.arg.id);
                 if (index !== -1) {
-                    state.products.items[index] = {...state.products.items[index], ...action.payload};
+                    // Use the spread operator to update the item immutably
+                    state.products.items[index] = { ...state.products.items[index], ...action.payload };
+                    // Log the updated product for debugging
+                    console.log('Updated product in state:', state.products.items[index]);
                 }
-            })         
+            })   
 
             .addCase(deleteProduct.fulfilled, (state, action) => {
                 state.products.items = state.products.items.filter(
