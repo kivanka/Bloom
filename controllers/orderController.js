@@ -1,20 +1,21 @@
 import OrderModel from '../models/order.js';
 
 export const create = async (req, res) => {
+    console.log(req.body); // Проверьте, что данные поступают корректно
+
     try {
         const doc = new OrderModel({
             products: req.body.products,
             total: req.body.total,
         });
 
-        const order = await doc.save();
-
+        const order = await doc.save(); // Здесь может произойти приведение типа
         res.json(order);
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Create attempt failed', error: err });
     }
-};
+}; 
 
 export const getAll = async (req, res) => {
     try {

@@ -20,6 +20,7 @@ const pages = [
     { title: 'Главная', path: '/' },
     { title: 'Категории', path: '/products' },
     { title: 'О нас', path: '/about-us' },
+    { title: 'Корзина', path: '/cart'},
 ];
 
 function Header() {

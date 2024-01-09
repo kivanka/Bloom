@@ -70,7 +70,11 @@ app.get('/products', ProductController.getAll)
 app.get('/products/category/:categoryId', ProductController.getByCategory);
 
 //orders
-app.post('/orders/create', allRolesAuth, createOrderValidation, handleValidationErrors, OrderController.create);
+app.post('/orders/create', allRolesAuth, (req, res, next) => {
+    console.log(req.body); // Для отладки
+    next();
+}, createOrderValidation, handleValidationErrors, OrderController.create);
+
 app.patch('/orders/:id/update', adminOnlyAuth, updateOrderValidation, handleValidationErrors, OrderController.update);
 app.delete('/orders/:id/delete', adminOnlyAuth, OrderController.remove);
 app.get('/orders/:id', allRolesAuth, OrderController.getOne);

@@ -5,6 +5,7 @@ import { fetchProductsById, updateProduct } from '../redux/slices/product';
 import { Container, Grid, Typography, Button, TextField, CircularProgress } from '@mui/material';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import PhoneInTalkIcon from '@mui/icons-material/PhoneInTalk';
+import { addToCart } from '../redux/slices/cart';
 
 const ProductProfilePage = () => {
     const { id } = useParams();
@@ -13,6 +14,18 @@ const ProductProfilePage = () => {
     const [editMode, setEditMode] = useState(false);
     const [updatedProduct, setUpdatedProduct] = useState({});
     const user = useSelector(state => state.auth.data);
+    const [quantity, setQuantity] = useState(1);
+
+    const handleQuantityChange = (e) => {
+        setQuantity(e.target.value);
+    };
+
+    const handleAddToCart = () => {
+        // Предполагая, что у вас есть какая-то функция для добавления в корзину
+        for (let i = 0; i < quantity; i++) {
+            dispatch(addToCart(product));
+        }
+    };
 
     useEffect(() => {
         if (id) {
@@ -112,8 +125,14 @@ const ProductProfilePage = () => {
                             <Typography variant="h4" color="primary" gutterBottom>
                                 ${product.price}
                             </Typography>
-                            <Button variant="contained" startIcon={<AddShoppingCartIcon />} sx={{ mr: 2 }}>
-                                Добавить в карзину
+                            <TextField
+                                label="Количество"
+                                type="number"
+                                value={quantity}
+                                onChange={handleQuantityChange}
+                            />
+                            <Button variant="contained" startIcon={<AddShoppingCartIcon />} sx={{ mr: 2 }} onClick={handleAddToCart}>
+                                Добавить в корзину
                             </Button>
                             <Button variant="contained" startIcon={<PhoneInTalkIcon />} color="success">
                                 Позовнить для заказа
