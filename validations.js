@@ -43,12 +43,14 @@ export const createOrderValidation = [
     body('products', 'Products must be an array').isArray(),
     body('products.*', 'Each product ID must be a valid MongoID').isMongoId(),
     body('total', 'Total must be a number').isNumeric(),
+    body('address', 'Address is required').notEmpty(),
 ];
 
 export const updateOrderValidation = [
     body('products', 'Products must be an array').optional().isArray(),
     body('products.*', 'Each product ID must be a valid MongoID').optional().isMongoId(),
     body('total', 'Total must be a number').optional().isNumeric(),
+    body('address', 'Address is required').optional().notEmpty(),
 ];
 
 //categorys

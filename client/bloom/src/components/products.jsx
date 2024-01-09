@@ -64,19 +64,19 @@ const ProductsPage = () => {
         selectedCategories.forEach(categoryId => {
             formData.append('categories[]', categoryId);
         });
-    
+
         const response = await uploadProduct(formData);
-    
+
         if (response.url) {
             const protocol = window.location.protocol;
             const fullImageUrl = `${protocol}//localhost:4444${response.url}`;
-    
+
             const productWithImage = { ...newProduct, imageUrl: fullImageUrl, categories: selectedCategories };
             dispatch(createProduct(productWithImage));
         }
-    
+
         handleClose();
-    };    
+    };
 
     const toggleSelectProduct = (id) => {
         setSelectedProducts(prevSelected =>
@@ -171,7 +171,7 @@ const ProductsPage = () => {
                                         {product.description}
                                     </Typography>
                                     <Typography variant="body1" color="text.primary">
-                                        Цена: {product.price} ₽
+                                        Цена: {product.price} BYN
                                     </Typography>
                                     <Link to={`/products/${product._id}`}>Подробнее</Link>
                                 </CardContent>

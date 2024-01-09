@@ -20,8 +20,7 @@ const ProductProfilePage = () => {
         setQuantity(e.target.value);
     };
 
-    const handleAddToCart = () => {
-        // Предполагая, что у вас есть какая-то функция для добавления в корзину
+    const handleAddToCart = () => { 
         for (let i = 0; i < quantity; i++) {
             dispatch(addToCart(product));
         }
@@ -123,7 +122,7 @@ const ProductProfilePage = () => {
                                 {product.description}
                             </Typography>
                             <Typography variant="h4" color="primary" gutterBottom>
-                                ${product.price}
+                                {product.price} BYN
                             </Typography>
                             <TextField
                                 label="Количество"

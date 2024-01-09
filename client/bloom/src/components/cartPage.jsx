@@ -1,32 +1,43 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { removeFromCart } from '../redux/slices/cart';
+import { removeFromCart, clearCart } from '../redux/slices/cart';
 import { createOrder } from '../redux/slices/order';
 import {
     Container, Table, TableBody, TableCell, TableContainer,
-    TableHead, TableRow, Paper, Button, Typography
+    TableHead, TableRow, Paper, Button, Typography, Modal, Box, TextField
 } from '@mui/material';
 import { Link } from 'react-router-dom';
 
 const CartPage = () => {
     const dispatch = useDispatch();
+    const [address, setAddress] = useState('');
     const cartItems = useSelector((state) => state.cart.items);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const handleRemoveFromCart = (productId) => {
         dispatch(removeFromCart(productId));
     };
 
-    const handleCheckout = () => {
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+        dispatch(clearCart());
+    };
+
+    const handleCheckout = async () => {
         const productIds = cartItems.map(item => item._id);
         const totalAmount = cartItems.reduce((total, item) => total + item.price, 0);
 
         const orderData = {
             products: productIds,
-            total: totalAmount
+            total: totalAmount,
+            address: address
         };
 
         dispatch(createOrder(orderData));
+        setIsModalOpen(true);
     };
+
+    console.log('Modal Open State:', isModalOpen);
 
     if (cartItems.length === 0) {
         return (
@@ -43,6 +54,22 @@ const CartPage = () => {
 
     return (
         <Container>
+            <Modal
+                open={isModalOpen}
+                onClose={handleCloseModal}
+                aria-labelledby="simple-modal-title"
+                aria-describedby="simple-modal-description"
+            >
+                <Box style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', backgroundColor: 'white', padding: '20px', boxShadow: 24, borderRadius: '4px' }}>
+                    <Typography variant="h6" id="simple-modal-title">Ваш заказ принят</Typography>
+                    <Typography variant="body1" id="simple-modal-description">
+                        Письмо с подтверждением было отправлено на вашу электронную почту.
+                    </Typography>
+                    <Button onClick={handleCloseModal} style={{ marginTop: '10px' }}>
+                        Закрыть
+                    </Button>
+                </Box>
+            </Modal>
             <TableContainer component={Paper}>
                 <Table>
                     <TableHead>
@@ -75,6 +102,14 @@ const CartPage = () => {
                     </TableBody>
                 </Table>
             </TableContainer>
+            <TextField
+                label="Адрес доставки"
+                variant="outlined"
+                fullWidth
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                style={{ marginBottom: '20px' }}
+            />
             <Button
                 variant="contained"
                 color="primary"
