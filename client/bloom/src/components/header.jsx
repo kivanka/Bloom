@@ -19,7 +19,7 @@ import avatart from '../../src/media/avatar.png';
 const pages = [
     { title: 'Главная', path: '/' },
     { title: 'Категории', path: '/products' },
-    { title: 'О нас', path: '/about-us' },
+    { title: 'О нас', path: '/about' },
     { title: 'Корзина', path: '/cart'},
 ];
 

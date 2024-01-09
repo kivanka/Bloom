@@ -12,6 +12,7 @@ import LoginPage from './components/login';
 import ProductsPage from './components/products';
 import ProductProfilePage from './components/product';
 import CartPage from './components/cartPage';
+import AboutPage from './components/aboutPage';
 
 function App() {
   const dispatch = useDispatch();
@@ -33,6 +34,7 @@ function App() {
               <Route path='/products' element={<ProductsPage></ProductsPage>}></Route>
               <Route path="/products/:id" element={<ProductProfilePage />} />
               <Route path='/cart' element={<CartPage></CartPage>} />
+              <Route path='/about' element={<AboutPage></AboutPage>} />
               {!isAuth && <Route path='/registration' element={<RegistrationPage/>} />}
               {!isAuth && <Route path='/login' element={<LoginPage/>} />}
               {isAuth && <Route path="*" element={<Navigate to="/" />} />}

@@ -4,8 +4,9 @@ import { removeFromCart } from '../redux/slices/cart';
 import { createOrder } from '../redux/slices/order';
 import {
     Container, Table, TableBody, TableCell, TableContainer,
-    TableHead, TableRow, Paper, Button
+    TableHead, TableRow, Paper, Button, Typography
 } from '@mui/material';
+import { Link } from 'react-router-dom';
 
 const CartPage = () => {
     const dispatch = useDispatch();
@@ -26,6 +27,19 @@ const CartPage = () => {
 
         dispatch(createOrder(orderData));
     };
+
+    if (cartItems.length === 0) {
+        return (
+            <Container>
+                <Typography variant="h5">Ваша корзина пока пуста</Typography>
+                <Link to="/products" style={{ textDecoration: 'none', color: '#007bff' }}>
+                    <Button variant="outlined" color="primary">
+                        Перейти в каталог
+                    </Button>
+                </Link>
+            </Container>
+        );
+    }
 
     return (
         <Container>
