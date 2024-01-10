@@ -13,6 +13,7 @@ import ProductsPage from './components/products';
 import ProductProfilePage from './components/product';
 import CartPage from './components/cartPage';
 import AboutPage from './components/aboutPage';
+import OrdersPage from './components/OrdersPage'; 
 
 function App() {
   const dispatch = useDispatch();
@@ -31,10 +32,11 @@ function App() {
         <Header />
         <Box component="main" flexGrow={1} sx={{ width: '100%' }}>
           <Routes>
-              <Route path='/products' element={<ProductsPage></ProductsPage>}></Route>
+              <Route path='/' element={<ProductsPage></ProductsPage>}></Route>
               <Route path="/products/:id" element={<ProductProfilePage />} />
               <Route path='/cart' element={<CartPage></CartPage>} />
               <Route path='/about' element={<AboutPage></AboutPage>} />
+              <Route path='/orders' element={<OrdersPage></OrdersPage>} />
               {!isAuth && <Route path='/registration' element={<RegistrationPage/>} />}
               {!isAuth && <Route path='/login' element={<LoginPage/>} />}
               {isAuth && <Route path="*" element={<Navigate to="/" />} />}

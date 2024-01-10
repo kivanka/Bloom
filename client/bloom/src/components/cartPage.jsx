@@ -11,8 +11,28 @@ import { Link } from 'react-router-dom';
 const CartPage = () => {
     const dispatch = useDispatch();
     const [address, setAddress] = useState('');
+    const [phoneNumber, setPhoneNumber] = useState('');
+    const [isPhoneValid, setIsPhoneValid] = useState(true);
     const cartItems = useSelector((state) => state.cart.items);
     const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const validatePhoneNumber = (number) => {
+        const regex = /^\+375 (33|29|25|44) \d{7}$/;
+        return regex.test(number);
+    };
+
+    const handlePhoneNumberChange = (e) => {
+        const number = e.target.value;
+        setPhoneNumber(number);
+    
+        // Проверка на соответствие формату или на пустую строку
+        if (number === '' || validatePhoneNumber(number)) {
+            setIsPhoneValid(true);
+        } else {
+            setIsPhoneValid(false);
+        }
+    };
+    
 
     const handleRemoveFromCart = (productId) => {
         dispatch(removeFromCart(productId));
@@ -30,7 +50,8 @@ const CartPage = () => {
         const orderData = {
             products: productIds,
             total: totalAmount,
-            address: address
+            address: address,
+            phoneNumber: phoneNumber,
         };
 
         dispatch(createOrder(orderData));
@@ -43,7 +64,7 @@ const CartPage = () => {
         return (
             <Container>
                 <Typography variant="h5">Ваша корзина пока пуста</Typography>
-                <Link to="/products" style={{ textDecoration: 'none', color: '#007bff' }}>
+                <Link to="/" style={{ textDecoration: 'none', color: '#007bff' }}>
                     <Button variant="outlined" color="primary">
                         Перейти в каталог
                     </Button>
@@ -63,7 +84,7 @@ const CartPage = () => {
                 <Box style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', backgroundColor: 'white', padding: '20px', boxShadow: 24, borderRadius: '4px' }}>
                     <Typography variant="h6" id="simple-modal-title">Ваш заказ принят</Typography>
                     <Typography variant="body1" id="simple-modal-description">
-                        Письмо с подтверждением было отправлено на вашу электронную почту.
+                        Мы свяжемся с вами по телефону для подтверждения заказа
                     </Typography>
                     <Button onClick={handleCloseModal} style={{ marginTop: '10px' }}>
                         Закрыть
@@ -102,6 +123,16 @@ const CartPage = () => {
                     </TableBody>
                 </Table>
             </TableContainer>
+            <TextField
+                label="Номер телефона"
+                variant="outlined"
+                fullWidth
+                error={!isPhoneValid}
+                helperText={!isPhoneValid ? "Неверный формат номера. Пример: +375 33 6146623" : ""}
+                value={phoneNumber}
+                onChange={handlePhoneNumberChange}
+                style={{ marginBottom: '20px' }}
+            />
             <TextField
                 label="Адрес доставки"
                 variant="outlined"

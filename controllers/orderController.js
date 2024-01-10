@@ -7,7 +7,8 @@ export const create = async (req, res) => {
         const doc = new OrderModel({
             products: req.body.products,
             total: req.body.total,
-            address: req.body.address
+            address: req.body.address,
+            phoneNumber: req.body.phoneNumber
         });
 
         const order = await doc.save();
@@ -50,7 +51,8 @@ export const update = async (req, res) => {
             {
                 products: req.body.products,
                 total: req.body.total,
-                address: req.body.address
+                address: req.body.address,
+                phoneNumber: req.body.phoneNumber
             }
         );
 

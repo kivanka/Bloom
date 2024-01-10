@@ -44,6 +44,7 @@ export const createOrderValidation = [
     body('products.*', 'Each product ID must be a valid MongoID').isMongoId(),
     body('total', 'Total must be a number').isNumeric(),
     body('address', 'Address is required').notEmpty(),
+    body('phoneNumber', 'Phome number is required').notEmpty(),
 ];
 
 export const updateOrderValidation = [
@@ -51,6 +52,7 @@ export const updateOrderValidation = [
     body('products.*', 'Each product ID must be a valid MongoID').optional().isMongoId(),
     body('total', 'Total must be a number').optional().isNumeric(),
     body('address', 'Address is required').optional().notEmpty(),
+    body('phoneNumber', 'Phome number is required').optional().notEmpty(),
 ];
 
 //categorys

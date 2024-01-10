@@ -19,7 +19,7 @@ const AboutPage = () => {
                         style={{ width: '20%', height: 'auto', borderRadius: '8px' }}
                     />
                 </Grid>
-                <Link to="/products" style={{ textDecoration: 'none', color: '#007bff' }}>
+                <Link to="/" style={{ textDecoration: 'none', color: '#007bff' }}>
                     <Button variant="outlined" color="primary">
                         Перейти в каталог
                     </Button>

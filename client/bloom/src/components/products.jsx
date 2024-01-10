@@ -5,6 +5,7 @@ import { fetchProducts, fetchProductsByCategory } from '../redux/slices/product'
 import { fetchCategories } from '../redux/slices/categories';
 import { createProduct, deleteProduct } from '../redux/slices/product';
 import axios from '../redux/axios';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { Button, Card, CardActionArea, CardMedia, CardContent, Typography, Grid, Select, MenuItem, FormControl, InputLabel, Dialog, DialogTitle, DialogContent, DialogActions, TextField } from '@mui/material';
 
 const ProductsPage = () => {
@@ -173,7 +174,15 @@ const ProductsPage = () => {
                                     <Typography variant="body1" color="text.primary">
                                         Цена: {product.price} BYN
                                     </Typography>
-                                    <Link to={`/products/${product._id}`}>Подробнее</Link>
+                                    <Button
+                                        component={Link}
+                                        to={`/products/${product._id}`}
+                                        variant="outlined"
+                                        color="primary"
+                                        endIcon={<ArrowForwardIcon />}
+                                    >
+                                        Подробнее
+                                    </Button>
                                 </CardContent>
                             </CardActionArea>
                         </Card>

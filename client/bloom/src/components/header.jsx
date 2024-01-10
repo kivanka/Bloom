@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -17,10 +17,10 @@ import logo from '../../src/media/logo.png';
 import avatart from '../../src/media/avatar.png';
 
 const pages = [
-    { title: 'Главная', path: '/' },
-    { title: 'Категории', path: '/products' },
+    { title: 'Категории', path: '/' },
     { title: 'О нас', path: '/about' },
-    { title: 'Корзина', path: '/cart'},
+    { title: 'Корзина', path: '/cart' },
+    { title: 'Заказы', path: '/orders' },
 ];
 
 function Header() {
@@ -29,6 +29,9 @@ function Header() {
 
     const dispatch = useDispatch();
     const isAuth = useSelector(selectIsAuth);
+    const userData = useSelector((state) => state.auth.data);
+
+    const isAdmin = userData && userData.role === 'admin';
 
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
@@ -46,7 +49,7 @@ function Header() {
     };
 
     const onClickLogout = () => {
-        if (window.confirm('Вы действительно хотие выйти из учетной записи?')) {
+        if (window.confirm('Вы действительно хотите выйти из учетной записи?')) {
             dispatch(logout());
             window.localStorage.removeItem('token');
         }
@@ -103,7 +106,7 @@ function Header() {
                                 display: { xs: 'block', md: 'none' },
                             }}
                         >
-                            {pages.map((page) => (
+                            {pages.filter(page => page.title !== 'Заказы' || isAdmin).map((page) => (
                                 <MenuItem key={page.title} onClick={handleCloseNavMenu}>
                                     <Link to={page.path} style={{ textDecoration: 'none', color: 'inherit' }}>
                                         <Typography textAlign="center">{page.title}</Typography>
@@ -113,7 +116,7 @@ function Header() {
                         </Menu>
                     </Box>
                     <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-                        {pages.map((page) => (
+                        {pages.filter(page => page.title !== 'Заказы' || isAdmin).map((page) => (
                             <Button
                                 key={page.title}
                                 onClick={handleCloseNavMenu}
@@ -194,4 +197,4 @@ function Header() {
     );
 }
 
-export default Header;
+export default Header; 
