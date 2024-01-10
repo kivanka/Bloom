@@ -20,8 +20,8 @@ const pages = [
     { title: 'Категории', path: '/' },
     { title: 'О нас', path: '/about' },
     { title: 'Корзина', path: '/cart' },
-    { title: 'Заказы', path: '/orders' },
-    { title: 'Управление категориями', path: '/catregories' },
+    { title: 'Заказы', path: '/orders', adminOnly: true },
+    { title: 'Управление категориями', path: '/categories', adminOnly: true },
 ];
 
 function Header() {
@@ -107,7 +107,7 @@ function Header() {
                                 display: { xs: 'block', md: 'none' },
                             }}
                         >
-                            {pages.filter(page => page.title !== 'Заказы' || isAdmin).map((page) => (
+                            {pages.filter(page => !page.adminOnly || isAdmin).map((page) => (
                                 <MenuItem key={page.title} onClick={handleCloseNavMenu}>
                                     <Link to={page.path} style={{ textDecoration: 'none', color: 'inherit' }}>
                                         <Typography textAlign="center">{page.title}</Typography>
@@ -117,7 +117,7 @@ function Header() {
                         </Menu>
                     </Box>
                     <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-                        {pages.filter(page => page.title !== 'Заказы' || isAdmin).map((page) => (
+                        {pages.filter(page => !page.adminOnly || isAdmin).map((page) => (
                             <Button
                                 key={page.title}
                                 onClick={handleCloseNavMenu}
@@ -198,4 +198,4 @@ function Header() {
     );
 }
 
-export default Header; 
+export default Header;

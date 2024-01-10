@@ -10,6 +10,7 @@ import { Button, Card, CardActionArea, CardMedia, CardContent, Typography, Grid,
 
 const ProductsPage = () => {
     const dispatch = useDispatch();
+    const [priceFilter, setPriceFilter] = useState({ min: '', max: '' });
     const [selectedProducts, setSelectedProducts] = useState([]);
     const categories = useSelector(state => state.categories.categories);
     const products = useSelector(state => state.products.products.items);
@@ -119,6 +120,13 @@ const ProductsPage = () => {
         setImageFile(event.target.files[0]);
     };
 
+    const filteredProducts = products.filter(product => {
+        const price = parseFloat(product.price);
+        const minPrice = priceFilter.min ? parseFloat(priceFilter.min) : -Infinity;
+        const maxPrice = priceFilter.max ? parseFloat(priceFilter.max) : Infinity;
+        return price >= minPrice && price <= maxPrice;
+    });
+
     return (
         <div style={{ margin: '20px' }}>
             {user && user.role === 'admin' && (
@@ -151,8 +159,20 @@ const ProductsPage = () => {
                     ))}
                 </Select>
             </FormControl>
+            <TextField
+                label="Мин. цена"
+                type="number"
+                value={priceFilter.min}
+                onChange={e => setPriceFilter({ ...priceFilter, min: e.target.value })}
+            />
+            <TextField
+                label="Макс. цена"
+                type="number"
+                value={priceFilter.max}
+                onChange={e => setPriceFilter({ ...priceFilter, max: e.target.value })}
+            />
             <Grid container spacing={2}>
-                {Array.isArray(products) && products.map(product => (
+                {Array.isArray(filteredProducts) && filteredProducts.map(product => (
                     <Grid item xs={12} sm={6} md={4} lg={3} key={product._id} onClick={() => toggleSelectProduct(product._id)}>
                         <Card style={{ backgroundColor: selectedProducts.includes(product._id) ? 'lightgray' : 'white' }}>
                             <CardActionArea>
