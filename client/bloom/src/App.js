@@ -15,6 +15,7 @@ import CartPage from './components/cartPage';
 import AboutPage from './components/aboutPage';
 import OrdersPage from './components/OrdersPage'; 
 import CategoriesPage from './components/CategoriesPage';
+import Footer from './components/footer';
 
 function App() {
   const dispatch = useDispatch();
@@ -38,13 +39,14 @@ function App() {
               <Route path='/cart' element={<CartPage></CartPage>} />
               <Route path='/about' element={<AboutPage></AboutPage>} />
               <Route path='/orders' element={<OrdersPage></OrdersPage>} />
-              <Route path='/catregories' element={<CategoriesPage></CategoriesPage>} />
+              <Route path='/categories' element={<CategoriesPage></CategoriesPage>} />
               {!isAuth && <Route path='/registration' element={<RegistrationPage/>} />}
               {!isAuth && <Route path='/login' element={<LoginPage/>} />}
               {isAuth && <Route path="*" element={<Navigate to="/" />} />}
               {!isAuth && <Route path="*" element={<Navigate to="/login" />} />}
           </Routes>
         </Box>
+        <Footer></Footer>
       </Box>
     </div>
   );
