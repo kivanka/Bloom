@@ -4,9 +4,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import { fetchProductsById, updateProduct } from '../redux/slices/product';
 import { fetchCategories } from '../redux/slices/categories';
 import {
-    Container, Grid, Typography, Button, TextField, Select, MenuItem, CircularProgress, FormControl, InputLabel, OutlinedInput, Chip
+    Container, Grid, Typography, Button, TextField, Select, MenuItem, CircularProgress, FormControl, InputLabel, OutlinedInput, Chip, Snackbar, IconButton
 } from '@mui/material';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import PhoneInTalkIcon from '@mui/icons-material/PhoneInTalk';
 import { addToCart } from '../redux/slices/cart';
 
@@ -25,6 +26,19 @@ const ProductProfilePage = () => {
     });
     const user = useSelector(state => state.auth.data);
     const [quantity, setQuantity] = useState(1);
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
+
+    const handleAddToCartClick = () => {
+        handleAddToCart();
+        setSnackbarOpen(true); // Открыть Snackbar при добавлении товара в корзину
+    };
+
+    const handleSnackbarClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setSnackbarOpen(false); // Закрыть Snackbar
+    };
 
     useEffect(() => {
         dispatch(fetchCategories());
@@ -73,15 +87,15 @@ const ProductProfilePage = () => {
 
     const handleSubmit = async () => {
         // Filter out invalid or null category IDs
-        const validCategoryIds = updatedProduct.categories.filter(categoryId => 
+        const validCategoryIds = updatedProduct.categories.filter(categoryId =>
             categoryId != null && typeof categoryId === 'string'
         );
-    
+
         const updatedData = {
             ...updatedProduct,
             categories: validCategoryIds
         };
-    
+
         try {
             console.log('Updating product with data:', updatedData); // Debugging log
             await dispatch(updateProduct({ id, updatedData }));
@@ -90,8 +104,8 @@ const ProductProfilePage = () => {
             console.error('Failed to update product:', error);
         }
     };
-    
-    
+
+
 
     if (!product) {
         return (
@@ -187,16 +201,37 @@ const ProductProfilePage = () => {
                             <Typography variant="h4" color="primary" gutterBottom>
                                 {product.price} BYN
                             </Typography>
-                            <TextField
-                                label="Количество"
-                                type="number"
-                                value={quantity}
-                                onChange={handleQuantityChange}
-                                InputProps={{ inputProps: { min: 1 } }}
-                            />
-                            <Button variant="contained" startIcon={<AddShoppingCartIcon />} sx={{ mr: 2 }} onClick={handleAddToCart}>
+                            <FormControl fullWidth>
+                                <InputLabel id="quantity-label">Количество</InputLabel>
+                                <Select
+                                    labelId="quantity-label"
+                                    label="Количество" // Эта метка связывается с InputLabel выше
+                                    value={quantity}
+                                    onChange={handleQuantityChange}
+                                >
+                                    {Array.from({ length: 10 }, (_, i) => (
+                                        <MenuItem key={i + 1} value={i + 1}>
+                                            {i + 1}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                            <Button variant="contained" startIcon={<AddShoppingCartIcon />} sx={{ mr: 2 }} onClick={handleAddToCartClick}>
                                 Добавить в корзину
                             </Button>
+                            <Snackbar
+                                open={snackbarOpen}
+                                autoHideDuration={6000}
+                                onClose={handleSnackbarClose}
+                                message="Товар добавлен в корзину"
+                                action={
+                                    <React.Fragment>
+                                        <IconButton size="small" aria-label="close" color="inherit" onClick={handleSnackbarClose}>
+                                            <CheckCircleIcon fontSize="small" />
+                                        </IconButton>
+                                    </React.Fragment>
+                                }
+                            />
                             <Button variant="contained" startIcon={<PhoneInTalkIcon />} color="success">
                                 Позвонить для заказа
                             </Button>
