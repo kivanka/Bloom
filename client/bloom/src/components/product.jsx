@@ -50,7 +50,10 @@ const ProductProfilePage = () => {
     };
 
     const handleAddToCart = () => {
-        dispatch(addToCart({ ...product, quantity: parseInt(quantity, 10) }));
+        // Предполагая, что у вас есть какая-то функция для добавления в корзину
+        for (let i = 0; i < quantity; i++) {
+            dispatch(addToCart(product));
+        }
     };
 
     const handleInputChange = (e) => {
