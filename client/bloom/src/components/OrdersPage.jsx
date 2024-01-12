@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchOrders, deleteOrder } from '../redux/slices/order';
 import {
@@ -15,33 +15,106 @@ import {
     ListItem,
     ListItemText,
     CardMedia,
-    Button
+    Button,
+    TextField,
+    Box
 } from '@mui/material';
 
 const OrdersPage = () => {
     const dispatch = useDispatch();
     const orders = useSelector((state) => state.orders.orders);
-    const orderStatus = useSelector((state) => state.orders.status);
+    const [sortedOrders, setSortedOrders] = useState([]);
+    const [sortDirection, setSortDirection] = useState({
+        price: 'asc',
+        quantity: 'asc',
+    });
+    const [filters, setFilters] = useState({
+        date: '',
+        phoneNumber: '',
+        address: '',
+    });
 
     useEffect(() => {
         dispatch(fetchOrders());
     }, [dispatch]);
 
+    useEffect(() => {
+        setSortedOrders(orders);
+    }, [orders]);
+
     const handleDelete = (orderId) => {
         dispatch(deleteOrder(orderId));
     };
 
-    if (orderStatus === 'loading') {
-        return <Typography>Loading...</Typography>;
-    }
+    const handleSort = (field) => {
+        const direction = sortDirection[field] === 'asc' ? 'desc' : 'asc';
+        const sorted = [...sortedOrders].sort((a, b) => {
+            const aValue = field === 'quantity' ? a.products.length : a.total;
+            const bValue = field === 'quantity' ? b.products.length : b.total;
 
-    if (orderStatus === 'failed') {
-        return <Typography>Error in fetching orders.</Typography>;
-    }
+            if (aValue < bValue) return direction === 'asc' ? -1 : 1;
+            if (aValue > bValue) return direction === 'asc' ? 1 : -1;
+            return 0;
+        });
+
+        setSortedOrders(sorted);
+        setSortDirection({ ...sortDirection, [field]: direction });
+    };
+
+    const handleFilterChange = (field, value) => {
+        setFilters({ ...filters, [field]: value });
+    };
+
+    const filteredOrders = sortedOrders.filter((order) => {
+        return (
+            (filters.date ? new Date(order.purchaseDate).toLocaleDateString().includes(filters.date) : true) &&
+            (filters.phoneNumber ? order.phoneNumber.includes(filters.phoneNumber) : true) &&
+            (filters.address ? order.address.toLowerCase().includes(filters.address.toLowerCase()) : true)
+        );
+    });
 
     return (
         <Container>
             <Typography variant="h4" style={{ margin: '20px 0' }}>Заказы</Typography>
+            <Box display="flex" justifyContent="space-between" mb={2}>
+                <TextField
+                    label="Поиск по номеру телефона"
+                    type="text"
+                    value={filters.phoneNumber}
+                    onChange={(e) => handleFilterChange('phoneNumber', e.target.value)}
+                    style={{ marginRight: '10px' }}
+                />
+                <TextField
+                    label="Поиск по адресу"
+                    type="text"
+                    value={filters.address}
+                    onChange={(e) => handleFilterChange('address', e.target.value)}
+                    style={{ marginRight: '10px' }}
+                />
+                <TextField
+                    label="Поиск по дате (гггг-мм-дд)"
+                    type="date"
+                    value={filters.date}
+                    onChange={(e) => handleFilterChange('date', e.target.value)}
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
+                    style={{ marginRight: '10px' }}
+                />
+                <Button
+                    variant="contained"
+                    onClick={() => handleSort('price')}
+                >
+                    Сортировать по цене {sortDirection.price === 'asc' ? '⬆️' : '⬇️'}
+                </Button>
+                <Button
+                    variant="contained"
+                    onClick={() => handleSort('quantity')}
+                    style={{ marginLeft: '10px' }}
+                >
+                    Сортировать по количеству {sortDirection.quantity === 'asc' ? '⬆️' : '⬇️'}
+                </Button>
+            </Box>
             <TableContainer component={Paper}>
                 <Table>
                     <TableHead>
@@ -56,7 +129,7 @@ const OrdersPage = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {orders.map((order) => (
+                        {filteredOrders.map((order) => (
                             <TableRow key={order._id}>
                                 <TableCell>{order._id}</TableCell>
                                 <TableCell>{new Date(order.purchaseDate).toLocaleDateString()}</TableCell>
@@ -73,9 +146,7 @@ const OrdersPage = () => {
                                                     image={product.imageUrl}
                                                     alt={product.name}
                                                 />
-                                                <ListItemText
-                                                    primary={product.name}
-                                                />
+                                                <ListItemText primary={product.name} />
                                             </ListItem>
                                         ))}
                                     </List>
@@ -98,4 +169,4 @@ const OrdersPage = () => {
     );
 };
 
-export default OrdersPage; 
+export default OrdersPage;
