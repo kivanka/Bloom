@@ -15,6 +15,7 @@ const CartPage = () => {
     const [isPhoneValid, setIsPhoneValid] = useState(true);
     const cartItems = useSelector((state) => state.cart.items);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const isCheckoutDisabled = !address || !phoneNumber || !isPhoneValid;
 
     const validatePhoneNumber = (number) => {
         const regex = /^\+375 (33|29|25|44) \d{7}$/;
@@ -24,7 +25,7 @@ const CartPage = () => {
     const handlePhoneNumberChange = (e) => {
         const number = e.target.value;
         setPhoneNumber(number);
-    
+
         // Проверка на соответствие формату или на пустую строку
         if (number === '' || validatePhoneNumber(number)) {
             setIsPhoneValid(true);
@@ -32,7 +33,7 @@ const CartPage = () => {
             setIsPhoneValid(false);
         }
     };
-    
+
 
     const handleRemoveFromCart = (productId) => {
         dispatch(removeFromCart(productId));
@@ -146,6 +147,7 @@ const CartPage = () => {
                 color="primary"
                 onClick={handleCheckout}
                 style={{ marginTop: '20px' }}
+                disabled={isCheckoutDisabled} // Свойство disabled устанавливается в true, если условие isCheckoutDisabled истинно
             >
                 Оформить заказ
             </Button>
