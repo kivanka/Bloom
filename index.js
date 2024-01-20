@@ -8,7 +8,8 @@ import {
     ProductController,
     OrderController,
     CategoryContoller,
-    ReviewController
+    ReviewController,
+    PromotionController
 } from './controllers/index.js';
 
 import {
@@ -21,7 +22,8 @@ import {
     createCategoryValidation,
     updateCategoryValidation,
     reviewCreateValidation,
-    reviewUpdateValidation
+    createPromotionValidation,
+    updatePromotionValidation,
 } from './validations.js';
 
 import {
@@ -72,6 +74,13 @@ app.delete('/products/:id/delete', adminOnlyAuth, ProductController.remove)
 app.get('/products/:id', ProductController.getOne);
 app.get('/products', ProductController.getAll)
 app.get('/products/category/:categoryId', ProductController.getByCategory);
+
+//promotions
+app.post('/promotions/create', adminOnlyAuth, createPromotionValidation, handleValidationErrors, PromotionController.create);
+app.patch('/promotions/:id/update', adminOnlyAuth, updatePromotionValidation, handleValidationErrors, PromotionController.update);
+app.delete('/promotions/:id/delete', adminOnlyAuth, PromotionController.remove)
+app.get('/promotions/:id', PromotionController.getOne);
+app.get('/promotions', PromotionController.getAll)
 
 //orders
 app.post('/orders/create', allRolesAuth, (req, res, next) => {

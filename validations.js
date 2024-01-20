@@ -38,6 +38,19 @@ export const updateProductValidation = [
     body('categories.*', 'Invalid category ID').optional().isMongoId(),
 ];
 
+//promitions
+export const createPromotionValidation = [
+    body('name', 'Product name is required').notEmpty(),
+    body('description', 'Product description is required').notEmpty(),
+    body('imageUrl', 'Invalid URL format for image').optional(),
+];
+
+export const updatePromotionValidation = [
+    body('name', 'Product name is required').optional().notEmpty(),
+    body('description', 'Product description is required').optional().notEmpty(),
+    body('imageUrl', 'Invalid URL format for image').optional(),
+];
+
 //orders
 export const createOrderValidation = [
     body('products', 'Products must be an array').isArray(),

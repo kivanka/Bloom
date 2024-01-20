@@ -73,7 +73,7 @@ const ProductProfilePage = () => {
                 description: product.description,
                 price: product.price,
                 imageUrl: product.imageUrl,
-                categories: product.categories.map(c => c._id) // Assuming product.categories is an array of category objects
+                categories: product.categories.map(c => c._id)
             });
         }
     }, [product]);

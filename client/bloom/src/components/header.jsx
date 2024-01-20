@@ -20,6 +20,7 @@ const pages = [
     { title: 'Категории', path: '/' },
     { title: 'О нас', path: '/about' },
     { title: 'Корзина', path: '/cart' },
+    { title: 'Акции', path: '/promotions'},
     { title: 'Заказы', path: '/orders', adminOnly: true },
     { title: 'Управление категориями', path: '/categories', adminOnly: true },
 ];
