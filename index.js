@@ -8,6 +8,7 @@ import {
     ProductController,
     OrderController,
     CategoryContoller,
+    ReviewController
 } from './controllers/index.js';
 
 import {
@@ -19,6 +20,8 @@ import {
     updateOrderValidation,
     createCategoryValidation,
     updateCategoryValidation,
+    reviewCreateValidation,
+    reviewUpdateValidation
 } from './validations.js';
 
 import {
@@ -60,6 +63,7 @@ app.post('/upload', adminOnlyAuth, upload.single('image'), (req, res) => {
 app.post('/auth/login', loginValidation, handleValidationErrors, UserController.login);
 app.post('/auth/register', registerValidation, handleValidationErrors, UserController.register);
 app.get('/auth/me', allRolesAuth, UserController.getMe);
+app.get('/user/:userId', allRolesAuth, UserController.getUserById);
 
 //products
 app.post('/products/create', adminOnlyAuth, createProductValidation, handleValidationErrors, ProductController.create);
@@ -86,6 +90,18 @@ app.patch('/categories/:id/update', adminOnlyAuth, updateCategoryValidation, han
 app.delete('/categories/:id/delete', adminOnlyAuth, CategoryContoller.remove);
 app.get('/categories/:id', CategoryContoller.getOne);
 app.get('/categories', CategoryContoller.getAll);
+
+// review pathes
+app.post('/product/:id/review-create', 
+    allRolesAuth,
+    reviewCreateValidation,
+    handleValidationErrors,
+    ReviewController.create
+);
+app.delete('/product/review-delete/:reviewId', allRolesAuth, ReviewController.remove);
+app.get('/product/:id/reviews',
+    ReviewController.getAll
+);
 
 app.listen(4444, (err) => {
     if (err) {

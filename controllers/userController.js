@@ -20,9 +20,9 @@ export const register = async (req, res) => {
 
         const token = jwt.sign(
             {
-                _id: user._id, 
+                _id: user._id,
                 role: user.role, // Добавьте это
-            }, 
+            },
             'secret123',
             {
                 expiresIn: '30d',
@@ -104,5 +104,22 @@ export const getMe = async (req, res) => {
         res.status(500).json({
             message: 'Access denied',
         });
+    }
+};
+
+export const getUserById = async (req, res) => {
+    try {
+        const user = await UserModel.findById(req.params.userId);
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        let responseData = {
+            _id: user._id,
+        };
+
+        res.json(responseData);
+    } catch (error) {
+        res.status(500).json({ message: "Server error" });
     }
 };

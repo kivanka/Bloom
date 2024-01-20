@@ -65,3 +65,15 @@ export const updateCategoryValidation = [
     param('id', 'Invalid category ID').isMongoId(),
     body('name', 'Category name must not exceed 32 characters').optional().isLength({ max: 32 }),
 ];
+
+//review validation
+export const reviewCreateValidation = [
+    param('id', 'Invalid product ID').isMongoId(),
+    body('text', 'Отзыв слищком короткий').isLength({ min: 4 }).isString(),
+    body('rating', 'Rate should be a number').isNumeric().isFloat({ min: 1, max: 5 }),
+];
+
+export const reviewUpdateValidation = [
+    body('text', 'Отзыв слищком короткий').optional().isLength({ min: 4 }).isString(),
+    body('rating', 'Rate should be a number').optional().isNumeric().isFloat({ min: 1, max: 5 }),
+];

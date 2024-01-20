@@ -4,18 +4,21 @@ import { useSelector, useDispatch } from 'react-redux';
 import { fetchProductsById, updateProduct } from '../redux/slices/product';
 import { fetchCategories } from '../redux/slices/categories';
 import {
-    Container, Grid, Typography, Button, TextField, Select, MenuItem, CircularProgress, FormControl, InputLabel, OutlinedInput, Chip, Snackbar, IconButton
+    Container, Grid, Typography, Button, TextField, Select, MenuItem, CircularProgress, Divider, FormControl, InputLabel, OutlinedInput, Chip, Snackbar, IconButton, Rating, List, ListItem, ListItemText, Link
 } from '@mui/material';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import PhoneInTalkIcon from '@mui/icons-material/PhoneInTalk';
 import { addToCart } from '../redux/slices/cart';
+import { fetchReviewsByProduct, createReview, deleteReview } from '../redux/slices/review';
+import { fetchUserById } from '../redux/slices/auth';
 
 const ProductProfilePage = () => {
     const { id } = useParams();
     const dispatch = useDispatch();
     const product = useSelector(state => state.products.currentProduct);
     const categories = useSelector(state => state.categories.categories);
+    const [usersData, setUsersData] = useState({});
     const [editMode, setEditMode] = useState(false);
     const [updatedProduct, setUpdatedProduct] = useState({
         name: '',
@@ -27,6 +30,8 @@ const ProductProfilePage = () => {
     const user = useSelector(state => state.auth.data);
     const [quantity, setQuantity] = useState(1);
     const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const { reviews } = useSelector(state => state.reviews);
+    const { id: productIdFromURL } = useParams();
 
     const handleAddToCartClick = () => {
         handleAddToCart();
@@ -39,6 +44,20 @@ const ProductProfilePage = () => {
         }
         setSnackbarOpen(false); // Закрыть Snackbar
     };
+
+    useEffect(() => {
+        if (productIdFromURL) {
+            dispatch(fetchReviewsByProduct(productIdFromURL));
+        }
+    }, [dispatch, productIdFromURL]);
+
+    useEffect(() => {
+        reviews.items.forEach(review => {
+            dispatch(fetchUserById(review.user._id)).then(res => {
+                setUsersData(prev => ({ ...prev, [review.user._id]: res.payload }));
+            });
+        });
+    }, [dispatch, reviews.items]);
 
     useEffect(() => {
         dispatch(fetchCategories());
@@ -59,12 +78,29 @@ const ProductProfilePage = () => {
         }
     }, [product]);
 
+    const [reviewData, setReviewData] = useState({
+        text: '',
+        rating: 0,
+    });
+
+    const handleCreateReview = () => {
+        dispatch(createReview({
+            productId: productIdFromURL,
+            reviewData: { ...reviewData, user: user._id }
+        }));
+    };
+
+    const handleDeleteReview = (reviewId) => {
+        if (window.confirm("Вы уверены, что хотите удалить этот отзыв?")) {
+            dispatch(deleteReview(reviewId));
+        }
+    };
+
     const handleQuantityChange = (e) => {
         setQuantity(e.target.value);
     };
 
     const handleAddToCart = () => {
-        // Предполагая, что у вас есть какая-то функция для добавления в корзину
         for (let i = 0; i < quantity; i++) {
             dispatch(addToCart(product));
         }
@@ -235,6 +271,61 @@ const ProductProfilePage = () => {
                             <Button variant="contained" startIcon={<PhoneInTalkIcon />} color="success">
                                 Позвонить для заказа
                             </Button>
+                            <Typography variant="h5" gutterBottom sx={{ mt: 4 }}>
+                                Отзывы
+                            </Typography>
+                            <TextField
+                                label="Ваш отзыв"
+                                multiline
+                                rows={4}
+                                value={reviewData.text}
+                                onChange={(e) => setReviewData({ ...reviewData, text: e.target.value })}
+                            />
+                            <Rating
+                                name="simple-controlled"
+                                value={reviewData.rating}
+                                onChange={(e, newValue) => {
+                                    setReviewData({ ...reviewData, rating: newValue });
+                                }}
+                            />
+                            <Button onClick={handleCreateReview}>Оставить отзыв</Button>
+                            <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
+                                {reviews.items.map((review, index) => (
+                                    <React.Fragment key={review._id}>
+                                        <ListItem alignItems="flex-start">
+                                            <ListItemText
+                                                primary={
+                                                    <Typography component="span">
+                                                        Отзыв от {review.user && usersData[review.user._id]
+                                                            ? <Link to={`/user/${review.user._id}`}>{usersData[review.user._id].fullName}</Link>
+                                                            : 'Пользователь'
+                                                        } {new Date(review.createdAt).toLocaleDateString()}
+                                                    </Typography>
+                                                }
+                                                secondary={
+                                                    <>
+                                                        <Typography
+                                                            sx={{ display: 'inline' }}
+                                                            component="span"
+                                                            variant="body2"
+                                                            color="text.primary"
+                                                        >
+                                                            Рейтинг: {review.rating}
+                                                        </Typography>
+                                                        {" — " + review.text}
+                                                    </>
+                                                }
+                                            />
+                                            {user && user._id === review.user._id && (
+                                                <Button onClick={() => handleDeleteReview(review._id)}>
+                                                    Удалить
+                                                </Button>
+                                            )}
+                                        </ListItem>
+                                        {index < reviews.items.length - 1 && <Divider variant="inset" component="li" />}
+                                    </React.Fragment>
+                                ))}
+                            </List>
                             {user && user.role === 'admin' && (
                                 <Button onClick={() => setEditMode(true)} variant="contained" color="secondary">
                                     Редактировать
