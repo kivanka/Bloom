@@ -12,6 +12,8 @@ import PhoneInTalkIcon from '@mui/icons-material/PhoneInTalk';
 import { addToCart } from '../redux/slices/cart';
 import { fetchReviewsByProduct, createReview, deleteReview } from '../redux/slices/review';
 import { fetchUserById } from '../redux/slices/auth';
+import { addFavorite } from '../redux/slices/favorite';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 
 const ProductProfilePage = () => {
     const { id } = useParams();
@@ -32,6 +34,21 @@ const ProductProfilePage = () => {
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const { reviews } = useSelector(state => state.reviews);
     const { id: productIdFromURL } = useParams();
+
+    const handleAddToFavorites = () => {
+        if (user && user._id && product && product._id) {
+            dispatch(addFavorite({ userId: user._id, productId: product._id }))
+                .then(() => {
+                    // You can add any post-action logic here, like displaying a message
+                    console.log("Product added to favorites");
+                })
+                .catch((error) => {
+                    console.error("Failed to add product to favorites", error);
+                });
+        } else {
+            console.log("User or product information is missing");
+        }
+    };
 
     const handleAddToCartClick = () => {
         handleAddToCart();
@@ -254,6 +271,9 @@ const ProductProfilePage = () => {
                             </FormControl>
                             <Button variant="contained" startIcon={<AddShoppingCartIcon />} sx={{ mr: 2 }} onClick={handleAddToCartClick}>
                                 Добавить в корзину
+                            </Button>
+                            <Button variant="contained" startIcon={<FavoriteIcon />} onClick={handleAddToFavorites}>
+                                Добавить в избранное
                             </Button>
                             <Snackbar
                                 open={snackbarOpen}

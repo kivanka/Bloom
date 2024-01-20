@@ -9,7 +9,8 @@ import {
     OrderController,
     CategoryContoller,
     ReviewController,
-    PromotionController
+    PromotionController,
+    FavoriteController,
 } from './controllers/index.js';
 
 import {
@@ -24,6 +25,7 @@ import {
     reviewCreateValidation,
     createPromotionValidation,
     updatePromotionValidation,
+    createFavoriteValidation,
 } from './validations.js';
 
 import {
@@ -87,7 +89,6 @@ app.post('/orders/create', allRolesAuth, (req, res, next) => {
     console.log(req.body); // Для отладки
     next();
 }, createOrderValidation, handleValidationErrors, OrderController.create);
-
 app.patch('/orders/:id/update', adminOnlyAuth, updateOrderValidation, handleValidationErrors, OrderController.update);
 app.delete('/orders/:id/delete', adminOnlyAuth, OrderController.remove);
 app.get('/orders/:id', allRolesAuth, OrderController.getOne);
@@ -111,6 +112,11 @@ app.delete('/product/review-delete/:reviewId', allRolesAuth, ReviewController.re
 app.get('/product/:id/reviews',
     ReviewController.getAll
 );
+
+// Favorite routes
+app.post('/favorites/add', allRolesAuth, createFavoriteValidation, handleValidationErrors, FavoriteController.add);
+app.delete('/favorites/remove', allRolesAuth, FavoriteController.remove);
+app.get('/favorites/user/:userId', allRolesAuth, FavoriteController.get);
 
 app.listen(4444, (err) => {
     if (err) {

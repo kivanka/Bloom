@@ -17,6 +17,7 @@ import OrdersPage from './components/OrdersPage';
 import CategoriesPage from './components/CategoriesPage';
 import Footer from './components/footer';
 import PromotionsPage from './components/promotions';
+import FavoritesPage from './components/FavoritesPage';
 
 function App() {
   const dispatch = useDispatch();
@@ -42,6 +43,7 @@ function App() {
               <Route path='/orders' element={<OrdersPage></OrdersPage>} />
               <Route path='/categories' element={<CategoriesPage></CategoriesPage>} />
               <Route path='/promotions' element={<PromotionsPage></PromotionsPage>} />
+              <Route path='/favorites' element={<FavoritesPage></FavoritesPage>} />
               {!isAuth && <Route path='/registration' element={<RegistrationPage/>} />}
               {!isAuth && <Route path='/login' element={<LoginPage/>} />}
               {isAuth && <Route path="*" element={<Navigate to="/" />} />}

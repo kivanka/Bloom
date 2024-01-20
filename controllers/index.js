@@ -4,3 +4,4 @@ export * as OrderController from './orderController.js';
 export * as CategoryContoller from './CategoryContoller.js';
 export * as ReviewController from './ReviewController.js';
 export * as PromotionController from './promotionController.js';
+export * as FavoriteController from './favoriteController.js';

@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchPromotion } from '../redux/slices/promotion';
 import { createPromotion, deletePromotion } from '../redux/slices/promotion';
 import axios from '../redux/axios';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { Button, Card, CardActionArea, CardMedia, CardContent, Typography, Grid, Dialog, DialogTitle, DialogContent, DialogActions, TextField } from '@mui/material';
 
 const PromotionsPage = () => {

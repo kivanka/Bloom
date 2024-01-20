@@ -21,6 +21,7 @@ const pages = [
     { title: 'О нас', path: '/about' },
     { title: 'Корзина', path: '/cart' },
     { title: 'Акции', path: '/promotions'},
+    { title: 'Избранное', path: '/favorites'},
     { title: 'Заказы', path: '/orders', adminOnly: true },
     { title: 'Управление категориями', path: '/categories', adminOnly: true },
 ];

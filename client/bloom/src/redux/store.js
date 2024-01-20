@@ -5,6 +5,7 @@ import { categoriesReducer } from './slices/categories';
 import { ordersReducer } from './slices/order';
 import { reviewReducer } from './slices/review';
 import { promotionReducer } from './slices/promotion';
+import { favoriteReducer } from './slices/favorite';
 import cartReducer from './slices/cart';
 
 const store = configureStore({
@@ -16,6 +17,7 @@ const store = configureStore({
         cart: cartReducer,
         reviews: reviewReducer,
         promotions: promotionReducer,
+        favorites: favoriteReducer,
     }
 });
 

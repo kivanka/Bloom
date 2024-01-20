@@ -90,3 +90,9 @@ export const reviewUpdateValidation = [
     body('text', 'Отзыв слищком короткий').optional().isLength({ min: 4 }).isString(),
     body('rating', 'Rate should be a number').optional().isNumeric().isFloat({ min: 1, max: 5 }),
 ];
+
+//fav
+export const createFavoriteValidation = [
+    body('userId', 'Invalid user ID').isMongoId(),
+    body('productId', 'Invalid product ID').isMongoId()
+];
