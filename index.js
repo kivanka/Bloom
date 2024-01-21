@@ -11,6 +11,7 @@ import {
     ReviewController,
     PromotionController,
     FavoriteController,
+    OrderHistoryController,
 } from './controllers/index.js';
 
 import {
@@ -26,6 +27,7 @@ import {
     createPromotionValidation,
     updatePromotionValidation,
     createFavoriteValidation,
+    createOrderHistoryValidation,
 } from './validations.js';
 
 import {
@@ -117,6 +119,10 @@ app.get('/product/:id/reviews',
 app.post('/favorites/add', allRolesAuth, createFavoriteValidation, handleValidationErrors, FavoriteController.add);
 app.delete('/favorites/remove', allRolesAuth, FavoriteController.remove);
 app.get('/favorites/user/:userId', allRolesAuth, FavoriteController.get);
+
+//history
+app.post('/order-history/add', allRolesAuth, createOrderHistoryValidation, handleValidationErrors, OrderHistoryController.add);
+app.get('/order-history/user/:userId', allRolesAuth, OrderHistoryController.get);
 
 app.listen(4444, (err) => {
     if (err) {

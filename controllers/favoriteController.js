@@ -4,7 +4,6 @@ export const add = async (req, res) => {
     try {
         const { userId, productId } = req.body;
 
-        // Check if the favorite list for the user already exists
         let favorite = await FavoriteModel.findOne({ user: userId });
         
         if (favorite) {

@@ -7,6 +7,8 @@ import {
     TableHead, TableRow, Paper, Button, Typography, Modal, Box, TextField
 } from '@mui/material';
 import { Link } from 'react-router-dom';
+import { addOrderHistory } from '../redux/slices/history';
+
 
 const CartPage = () => {
     const dispatch = useDispatch();
@@ -16,6 +18,7 @@ const CartPage = () => {
     const cartItems = useSelector((state) => state.cart.items);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const isCheckoutDisabled = !address || !phoneNumber || !isPhoneValid;
+    const user = useSelector((state) => state.auth.data);
 
     const validatePhoneNumber = (number) => {
         const regex = /^\+375 (33|29|25|44) \d{7}$/;
@@ -57,6 +60,14 @@ const CartPage = () => {
 
         dispatch(createOrder(orderData));
         setIsModalOpen(true);
+
+        try {
+            const orderResponse = await dispatch(createOrder(orderData)).unwrap();
+            dispatch(addOrderHistory({ userId: user._id, orderId: orderResponse._id }));
+            setIsModalOpen(true);
+        } catch (error) {
+            console.error('Failed to create order: ', error);
+        }
     };
 
     console.log('Modal Open State:', isModalOpen);

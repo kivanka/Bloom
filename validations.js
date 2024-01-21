@@ -96,3 +96,9 @@ export const createFavoriteValidation = [
     body('userId', 'Invalid user ID').isMongoId(),
     body('productId', 'Invalid product ID').isMongoId()
 ];
+
+//history
+export const createOrderHistoryValidation = [
+    body('userId', 'Invalid user ID').isMongoId(),
+    body('orderId', 'Invalid order ID').isMongoId()
+];
